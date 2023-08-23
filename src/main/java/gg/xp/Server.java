@@ -23,6 +23,7 @@ import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
 import static java.net.HttpURLConnection.HTTP_ENTITY_TOO_LARGE;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 public class Server implements Startable {
 
@@ -57,6 +58,9 @@ public class Server implements Startable {
 			server.setExecutor(command -> tf.newThread(command).start());
 			server.createContext("/", (request) -> {
 				request.sendResponseHeaders(HTTP_NOT_FOUND, -1);
+			});
+			server.createContext("/healthcheck", (request) -> {
+				request.sendResponseHeaders(HTTP_OK, -1);
 			});
 			server.createContext(base.getPath(), this::handle);
 			log.info("Server setup done");
