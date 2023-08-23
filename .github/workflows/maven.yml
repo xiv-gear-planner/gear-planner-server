@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          tags: gear-planner-server:latest
+          tags: ghcr.io/xpdota/gear-planner-server:latest
           push: true
 
 # TODO: doesn't have permissions
