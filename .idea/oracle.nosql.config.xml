@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ConnectionDataProviderService">
+    <option name="dict">
+      <map>
+        <entry key="/Cloud/COMPARTMENT" value="" />
+        <entry key="/Cloud/Cloud/endpoint" value="https://nosql.us-sanjose-1.oci.oraclecloud.com" />
+        <entry key="/Cloud/FINGERPRINT" value="ff:68:9c:dd:30:6d:3a:d8:eb:84:e0:ff:55:f9:55:df" />
+        <entry key="/Cloud/PASSPHRASE" value="" />
+        <entry key="/Cloud/PRIVATEKEY" value="C:\Users\Matt\.oci\mattventura@me.com_2023-08-16T16 01 43.934Z.pem" />
+        <entry key="/Cloud/SDK_PATH" value="C:\oracle-nosql-java-sdk" />
+        <entry key="/Cloud/TENANTID" value="ocid1.tenancy.oc1..aaaaaaaatkseacumq46mhxx7yfza7xynxfp5beytywb4p6zvpvrsngxic5ja" />
+        <entry key="/Cloud/USERID" value="ocid1.user.oc1..aaaaaaaagrxaub7gpxyzyyaocwofsx7qifxowawgnhzbyrao6mnvouxdxwfa" />
+        <entry key="/Cloudsim/Cloudsim/service-url" value="http://localhost:8080" />
+        <entry key="/Cloudsim/SDK_PATH" value="" />
+        <entry key="/Cloudsim/TENANT_ID" value="exampleId" />
+        <entry key="/Onprem/Onprem/proxy-url" value="" />
+        <entry key="/Onprem/PASSWORD" value="" />
+        <entry key="/Onprem/SDK_PATH" value="" />
+        <entry key="/Onprem/SECURITY" value="SSL" />
+        <entry key="/Onprem/TRUST_STORE" value="" />
+        <entry key="/Onprem/TS_PASSPHRASE" value="" />
+        <entry key="/Onprem/USER_NAME" value="" />
+        <entry key="/profile_type" value="Cloud" />
+        <entry key="/show_table/page_size" value="20" />
+      </map>
+    </option>
+  </component>
+</project>
