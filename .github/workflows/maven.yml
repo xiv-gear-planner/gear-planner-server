@@ -73,7 +73,7 @@ jobs:
             podman login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.PAT }}
             podman pull  ${{ env.REGISTRY}}/xpdota/gear-planner-server:master
             podman build -t gear-planner-deploy .
-            podman restart gear-planner
+            sudo systemctl restart container-gear-planner.service
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph

@@ -11,6 +11,7 @@ public class GearPlanServerMain {
 	private static final Logger log = LoggerFactory.getLogger(GearPlanServerMain.class);
 
 	public static void main(String[] args) {
+		log.info("Server starting...");
 		MutablePicoContainer pico = new PicoBuilder()
 				.withCaching()
 				.withLifecycle(StartableLifecycleStrategy.class)
