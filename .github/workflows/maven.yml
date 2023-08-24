@@ -68,6 +68,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.KEY }}
+          script_stop: true
           script: |
             podman login ghcr.io -u $GITHUB_USER -p ${{ secrets.GITHUB_TOKEN }}
             podman pull ghcr.io/xpdota/gear-planner-server:master
