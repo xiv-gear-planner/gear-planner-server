@@ -70,7 +70,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script_stop: true
           script: |
-            podman login ${{ env.REGISTRY }} -u ${{ github.repository_owner }} -p ${{ secrets.PAT }}
+            podman login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.PAT }}
             podman pull  ${{ env.REGISTRY}}/${{ github.repository_owner }}/gear-planner-server:master
             podman build -t gear-planner-deploy .
             sudo systemctl restart container-gear-planner.service
