@@ -71,7 +71,7 @@ jobs:
           script_stop: true
           script: |
             podman login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.PAT }}
-            podman pull  ${{ env.REGISTRY}}/xpdota/gear-planner-server:master --log-level debug
+            podman pull  ${{ env.REGISTRY}}/xpdota/gear-planner-server:master
             podman build -t gear-planner-deploy .
             podman restart gear-planner
 # TODO: doesn't have permissions
