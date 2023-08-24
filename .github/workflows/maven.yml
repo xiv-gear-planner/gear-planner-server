@@ -70,7 +70,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script_stop: true
           script: |
-            podman login -u $GITHUB_USER -p ${{ secrets.GITHUB_TOKEN }} ghcr.io 
+            podman login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
             podman pull ghcr.io/xpdota/gear-planner-server:master
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
