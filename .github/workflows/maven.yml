@@ -70,7 +70,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script_stop: true
           script: |
-            podman login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITPUB_PAT }}
+            podman login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.PAT }}
             podman pull  ${{ env.REGISTRY}}/xpdota/gear-planner-server:master --log-level debug
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
