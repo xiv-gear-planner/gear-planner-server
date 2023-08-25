@@ -73,7 +73,18 @@ jobs:
             podman login ${{ env.REGISTRY }} -u $ -p ${{ secrets.GITHUB_TOKEN }}
             podman pull  ${{ env.REGISTRY}}/${{ github.repository_owner }}/gear-planner-server:master
             podman build -t gear-planner-deploy .
-            sudo systemctl restart container-gear-planner.service
+
+      - name: Restart services
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.KEY }}
+          script_stop: true
+          sync: true
+          script: |
+            systemctl --user restart gear-planner.service
+            sleep 30
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
