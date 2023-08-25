@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsServer;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
