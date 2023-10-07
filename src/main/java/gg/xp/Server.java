@@ -53,6 +53,8 @@ public class Server implements Startable {
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final Database db;
 	private final AtomicInteger errCount = new AtomicInteger(0);
+	private final AtomicInteger getCount = new AtomicInteger(0);
+	private final AtomicInteger postCount = new AtomicInteger(0);
 	private final Instant startedAt = Instant.now();
 
 	public Server(Config config, Database db) {
@@ -65,7 +67,7 @@ public class Server implements Startable {
 				request.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 			});
 			server.createContext("/healthcheck", (request) -> {
-				doResponse(request, "Health Check OK, uptime %s, error count: %s".formatted(getUptime(), errCount.get()));
+				doResponse(request, "Health Check OK, uptime %s, GETs %s, POSTs %s, errors: %s".formatted(getUptime(), getCount.get(), postCount.get(), errCount.get()));
 			});
 			server.createContext(base.getPath(), this::handle);
 			log.info("Server setup done");
@@ -125,6 +127,7 @@ public class Server implements Startable {
 	}
 
 	private void makeShortLink(HttpExchange httpExchange, JsonNode json) throws IOException {
+		postCount.incrementAndGet();
 		UUID uuid = UUID.randomUUID();
 		byte[] uuidBytes = uuid.toString().getBytes(StandardCharsets.UTF_8);
 		String stringed = json.toString();
@@ -137,6 +140,7 @@ public class Server implements Startable {
 	}
 
 	private void retrieveShortLink(HttpExchange httpExchange) throws IOException {
+		getCount.incrementAndGet();
 		String path = base.relativize(httpExchange.getRequestURI()).getPath();
 		String result = db.getShortlink(UUID.fromString(path));
 //		log.info("GET UUID: {}", );
