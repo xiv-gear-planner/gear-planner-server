@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
@@ -15,8 +16,11 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
 import static java.net.HttpURLConnection.HTTP_ENTITY_TOO_LARGE;
@@ -48,18 +52,20 @@ public class Server implements Startable {
 	private final HttpServer server;
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final Database db;
+	private final AtomicInteger errCount = new AtomicInteger(0);
+	private final Instant startedAt = Instant.now();
 
 	public Server(Config config, Database db) {
 		this.db = db;
 		try {
-			// TODO: ssl
+			// TODO: is https needed? public-facing https is handled by the load balancer
 			server = HttpServer.create(new InetSocketAddress(config.getRequired(Integer.class, "port")), 20);
 			server.setExecutor(command -> tf.newThread(command).start());
 			server.createContext("/", (request) -> {
 				request.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 			});
 			server.createContext("/healthcheck", (request) -> {
-				request.sendResponseHeaders(HTTP_OK, -1);
+				doResponse(request, "Health Check OK, uptime %s, error count: %s".formatted(getUptime(), errCount.get()));
 			});
 			server.createContext(base.getPath(), this::handle);
 			log.info("Server setup done");
@@ -67,6 +73,10 @@ public class Server implements Startable {
 		catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public Duration getUptime() {
+		return Duration.between(startedAt, Instant.now());
 	}
 
 	@Override
@@ -103,7 +113,8 @@ public class Server implements Startable {
 			}
 		}
 		catch (Throwable e) {
-			log.error("Error", e);
+			log.error("Error on {}", httpExchange.getRequestURI(), e);
+			errCount.incrementAndGet();
 			try {
 				httpExchange.sendResponseHeaders(HTTP_INTERNAL_ERROR, -1);
 			}
@@ -115,9 +126,10 @@ public class Server implements Startable {
 
 	private void makeShortLink(HttpExchange httpExchange, JsonNode json) throws IOException {
 		UUID uuid = UUID.randomUUID();
-		log.info("UUID: {}, data: {}", uuid, json);
 		byte[] uuidBytes = uuid.toString().getBytes(StandardCharsets.UTF_8);
-		db.putShortLink(uuid, json.toString());
+		String stringed = json.toString();
+		log.info("CREATED UUID: {}, data: {}", uuid, StringUtils.truncate(stringed, 100));
+		db.putShortLink(uuid, stringed);
 		httpExchange.sendResponseHeaders(201, uuidBytes.length);
 		OutputStream body = httpExchange.getResponseBody();
 		body.write(uuidBytes);
@@ -127,7 +139,9 @@ public class Server implements Startable {
 	private void retrieveShortLink(HttpExchange httpExchange) throws IOException {
 		String path = base.relativize(httpExchange.getRequestURI()).getPath();
 		String result = db.getShortlink(UUID.fromString(path));
+//		log.info("GET UUID: {}", );
 		if (result == null) {
+			log.info("404: {}", path);
 			httpExchange.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 		}
 		else {
@@ -140,23 +154,9 @@ public class Server implements Startable {
 	}
 
 	private void doResponse(HttpExchange httpExchange, byte[] responseBytes) throws IOException {
-		httpExchange.sendResponseHeaders(200, responseBytes.length);
+		httpExchange.sendResponseHeaders(HTTP_OK, responseBytes.length);
 		OutputStream body = httpExchange.getResponseBody();
 		body.write(responseBytes);
 		body.close();
 	}
-//
-//	private int getLocalPort() {
-//		return server.getAddress().getPort();
-//	}
-//
-//	private URL getUrl() {
-//		// TODO: allow hostname to be overridden
-//		try {
-//			return new URL("http", "localhost", getLocalPort(), "/");
-//		}
-//		catch (MalformedURLException e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
 }
