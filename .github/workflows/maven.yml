@@ -82,9 +82,12 @@ jobs:
           key: ${{ secrets.KEY }}
           script_stop: true
           sync: true
+          # TODO: instead of a fixed sleep, use curl's retry abilities
+          # Also look into docker health check
           script: |
             systemctl --user restart gear-planner.service
             sleep 30
+            curl --fail http://localhost:8080/healthcheck
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
