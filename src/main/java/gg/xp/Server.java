@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -18,6 +19,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -99,7 +101,18 @@ public class Server implements Startable {
 		try {
 			switch (httpExchange.getRequestMethod()) {
 				case "POST" -> {
-					byte[] bodyBytes = httpExchange.getRequestBody().readAllBytes();
+					String clStr = httpExchange.getRequestHeaders().getFirst("Content-Length");
+					try {
+						if (clStr != null && Integer.parseInt(clStr) > MAX_SHORTLINK_BYTES) {
+							httpExchange.sendResponseHeaders(HTTP_ENTITY_TOO_LARGE, -1);
+							return;
+						}
+					}
+					catch (NumberFormatException ignored) {
+					}
+					InputStream body = httpExchange.getRequestBody();
+					byte[] bodyBytes = body.readNBytes(MAX_SHORTLINK_BYTES + 1000);
+					body.close();
 					if (bodyBytes.length > MAX_SHORTLINK_BYTES) {
 						httpExchange.sendResponseHeaders(HTTP_ENTITY_TOO_LARGE, -1);
 					}
