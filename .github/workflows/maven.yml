@@ -89,6 +89,7 @@ jobs:
           sync: true
           # TODO: instead of a fixed sleep, use curl's retry abilities
           script: |
+            systemctl --user daemon-reload
             systemctl --user restart gear-planner.service
             sleep 30
             curl --fail http://localhost:8080/healthcheck
