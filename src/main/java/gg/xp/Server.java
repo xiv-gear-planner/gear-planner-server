@@ -70,7 +70,7 @@ public class Server implements Startable {
 				request.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 			});
 			server.createContext("/healthcheck", (request) -> {
-				doResponse(request, "Health Check OK, uptime: %s, GETs: %s, POSTs: %s, errors: %s, cache entries: %s".formatted(getUptime(), getCount.get(), postCount.get(), errCount.get(), cache.cacheSize()));
+				doResponse(request, "Health Check OK, uptime: %s, GETs: %s, POSTs: %s, errors: %s, cache entries: %s\n".formatted(getUptime(), getCount.get(), postCount.get(), errCount.get(), cache.cacheSize()));
 			});
 			server.createContext(base.getPath(), this::handle);
 			log.info("Server setup done");
