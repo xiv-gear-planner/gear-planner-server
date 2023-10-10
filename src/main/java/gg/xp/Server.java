@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,9 +57,11 @@ public class Server implements Startable {
 	private final AtomicInteger getCount = new AtomicInteger(0);
 	private final AtomicInteger postCount = new AtomicInteger(0);
 	private final Instant startedAt = Instant.now();
+	private final Cache cache;
 
-	public Server(Config config, Database db) {
+	public Server(Config config, Database db, Cache cache) {
 		this.db = db;
+		this.cache = cache;
 		try {
 			// TODO: is https needed? public-facing https is handled by the load balancer
 			server = HttpServer.create(new InetSocketAddress(config.getRequired(Integer.class, "port")), 20);
@@ -146,6 +147,7 @@ public class Server implements Startable {
 		String stringed = json.toString();
 		log.info("CREATED UUID: {}, data: {}", uuid, StringUtils.truncate(stringed, 100));
 		db.putShortLink(uuid, stringed);
+		cache.set(uuid, stringed);
 		httpExchange.sendResponseHeaders(201, uuidBytes.length);
 		OutputStream body = httpExchange.getResponseBody();
 		body.write(uuidBytes);
@@ -155,7 +157,8 @@ public class Server implements Startable {
 	private void retrieveShortLink(HttpExchange httpExchange) throws IOException {
 		getCount.incrementAndGet();
 		String path = base.relativize(httpExchange.getRequestURI()).getPath();
-		String result = db.getShortlink(UUID.fromString(path));
+		UUID uuid = UUID.fromString(path);
+		String result = cache.computeIfAbsent(uuid, db::getShortlink);
 //		log.info("GET UUID: {}", );
 		if (result == null) {
 			log.info("404: {}", path);

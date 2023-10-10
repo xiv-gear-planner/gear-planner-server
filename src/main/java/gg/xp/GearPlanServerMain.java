@@ -19,6 +19,7 @@ public class GearPlanServerMain {
 		Config config = new Config();
 		pico.addComponent(config);
 		pico.addComponent(Server.class);
+		pico.addComponent(new GzipCacheImpl(5000, 10_000));
 		pico.addComponent(OracleNoSqlDb.class);
 		try {
 			pico.getComponent(Server.class);
