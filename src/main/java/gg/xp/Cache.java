@@ -11,4 +11,5 @@ public interface Cache {
 
 	void set(UUID key, String value);
 
+	int cacheSize();
 }

@@ -181,6 +181,7 @@ public class GzipCacheImpl implements Cache, Startable {
 		map.put(key, new CacheEntry(value));
 	}
 
+	@Override
 	public int cacheSize() {
 		return map.size();
 	}
