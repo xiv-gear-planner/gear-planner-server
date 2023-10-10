@@ -18,6 +18,7 @@ public class CacheTest {
 	void testCachePruning() throws InterruptedException {
 		GzipCacheImpl cache = new GzipCacheImpl(100, 1000);
 		cache.start();
+		Thread.sleep(50);
 		AtomicInteger counter = new AtomicInteger();
 		Function<UUID, String> conv = uuid -> {
 			counter.incrementAndGet();
@@ -77,6 +78,7 @@ public class CacheTest {
 	void testCacheNoPrune() throws InterruptedException {
 		GzipCacheImpl cache = new GzipCacheImpl(100, 1000);
 		cache.start();
+		Thread.sleep(50);
 		AtomicInteger counter = new AtomicInteger();
 		Function<UUID, String> conv = uuid -> {
 			counter.incrementAndGet();
