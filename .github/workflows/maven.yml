@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Java CI with Maven + Docker deployment
 
 on:
   workflow_dispatch:
@@ -87,13 +87,12 @@ jobs:
           key: ${{ secrets.KEY }}
           script_stop: true
           sync: true
-          # TODO: instead of a fixed sleep, use curl's retry abilities
           script: |
             systemctl --user daemon-reload
             systemctl --user restart gear-planner.service
-            curl --fail http://localhost:8080/healthcheck --retry 10 --retry-all-errors --retry-delay 3
+            curl --fail http://localhost:8080/healthcheck --retry 10 --retry-all-errors --retry-delay 3 --no-progress-meter
             # Get something out of the DB so that the DB conn isn't cold-starting
-            curl --fail http://localhost:8080/shortlink/83cfa8ce-9533-4306-9c45-fc191d307ff1 --retry 10 --retry-all-errors --retry-delay 3
+            curl --fail http://localhost:8080/shortlink/83cfa8ce-9533-4306-9c45-fc191d307ff1 --retry 10 --retry-all-errors --retry-delay 3 --no-progress-meter
 
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
