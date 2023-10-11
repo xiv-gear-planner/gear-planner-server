@@ -91,8 +91,10 @@ jobs:
           script: |
             systemctl --user daemon-reload
             systemctl --user restart gear-planner.service
-            sleep 30
-            curl --fail http://localhost:8080/healthcheck
+            curl --fail http://localhost:8080/healthcheck --retry 10 --retry-all-errors --retry-delay 3
+            # Get something out of the DB so that the DB conn isn't cold-starting
+            curl --fail http://localhost:8080/shortlink/83cfa8ce-9533-4306-9c45-fc191d307ff1 --retry 10 --retry-all-errors --retry-delay 3
+
 # TODO: doesn't have permissions
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
