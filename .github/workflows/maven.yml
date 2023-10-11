@@ -77,7 +77,7 @@ jobs:
           script: |
             podman login ${{ env.REGISTRY }} -u $ -p ${{ secrets.GITHUB_TOKEN }}
             podman pull  ${{ env.REGISTRY}}/${{ github.repository_owner }}/gear-planner-server:master
-            podman build -t gear-planner-deploy .
+            podman build -t gear-planner-deploy . --format docker
 
       - name: Restart services
         uses: appleboy/ssh-action@v1.0.0
