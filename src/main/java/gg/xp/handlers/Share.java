@@ -93,9 +93,8 @@ public class Share {
 				"/>
 				<meta property="og:description" content=\"""" + desc + """
 				"/>
-				<meta property="og:url" content=\"""" + redirectUrl + """
-				"/>
-				<meta property="og:site_name" content="XivGear"/>
+				<!--<meta property="og:url" content=\"""" + redirectUrl + """
+				"/>-->
 				<title>XivGear - FFXIV Gear Planner</title>
 				<!-- <meta http-equiv="Refresh" content="0; url='""" + redirectUrl + """
 				'" /> -->
