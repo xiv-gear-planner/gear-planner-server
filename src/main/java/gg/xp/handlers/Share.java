@@ -69,6 +69,7 @@ public class Share {
 				}
 				// TODO: parameterize this
 				String redir = "https://xivgear.app/#/sl/" + path;
+				httpExchange.getResponseHeaders().add("Content-Type", "text/html; charset=utf-8");
 				ResponseUtils.doResponse(httpExchange, buildShareTemplate(name, desc, redir));
 			}
 		}
