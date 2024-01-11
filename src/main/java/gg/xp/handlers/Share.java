@@ -88,6 +88,8 @@ public class Share {
 				       <head>
 				       	<meta charset="UTF-8">
 				       	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=0.8, user-scalable=no">
+				       	<meta property="og:site_name" content="XivGear"/>
+				       	<meta property="og:type" content="website"/>
 				       	<meta property="og:title" content=\"""" + title + """
 				       "/>
 				       <meta property="og:description" content=\"""" + desc + """
@@ -98,6 +100,7 @@ public class Share {
 				       '" />
 				          	 </head>
 				          	 <body>
+				          	 XivGear
 				          	 </body>
 				          	 </html>
 				          """;
