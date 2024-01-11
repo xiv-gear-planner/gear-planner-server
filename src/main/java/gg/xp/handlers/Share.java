@@ -83,28 +83,32 @@ public class Share {
 	private static String buildShareTemplate(String title, String desc, String redirectUrl) {
 		title = StringEscapeUtils.escapeHtml4(title);
 		desc = StringEscapeUtils.escapeHtml4(desc);
-		return """
-				<!DOCTYPE html>
-				<html lang="en">
-				<head>
-				<meta charset="UTF-8">
-				<meta property="og:site_name" content="XivGear"/>
-				<meta property="og:type" content="website"/>
-				<meta property="og:title" content=\"""" + title + """
-				"/>
-				<meta property="og:description" content=\"""" + desc + """
-				"/>
-				<meta property="og:url" content=\"""" + redirectUrl + """
-				"/>
-				<title>XivGear - FFXIV Gear Planner</title>
-				<meta http-equiv="Refresh" content="0; url='""" + redirectUrl + """
-				'" />
-				</head>
-				<body>
-				XivGear
-				</body>
-				</html>
-				""";
+		return
+				"""
+						<!DOCTYPE html>
+						<html lang="en">
+						<head>
+						<meta charset="UTF-8">
+						<meta property="og:site_name" content="XivGear"/>
+						<meta property="og:type" content="website"/>
+						<meta property="og:title" content=\"""" + title + """
+						"/>
+						<meta property="og:description" content=\"""" + desc + """
+						"/>
+						<meta property="og:url" content=\"""" + redirectUrl + """
+						"/>
+						<link rel="stylesheet" href="https://xivgear.app/style.css"/>
+						<title>XivGear - FFXIV Gear Planner</title>
+						<meta http-equiv="Refresh" content="0; url='""" + redirectUrl + """
+						'" />
+						</head>
+						<body>
+						<div id="content-area">
+						<h1>Loading... </h1>
+						</div>
+						</body>
+						</html>
+						""";
 	}
 
 }
