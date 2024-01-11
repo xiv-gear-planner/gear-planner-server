@@ -83,27 +83,28 @@ public class Share {
 		title = StringEscapeUtils.escapeHtml4(title);
 		desc = StringEscapeUtils.escapeHtml4(desc);
 		return """
-				       		<!DOCTYPE html>
-				       <html lang="en">
-				       <head>
-				       	<meta charset="UTF-8">
-				       	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=0.8, user-scalable=no">
-				       	<meta property="og:site_name" content="XivGear"/>
-				       	<meta property="og:type" content="website"/>
-				       	<meta property="og:title" content=\"""" + title + """
-				       "/>
-				       <meta property="og:description" content=\"""" + desc + """
-				       "/>
-				       <meta property="og:site_name" content="XivGear"/>
-				       <title>XivGear - FFXIV Gear Planner</title>
-				       <meta http-equiv="Not-Refresh" content="0; url='""" + redirectUrl + """
-				       '" />
-				          	 </head>
-				          	 <body>
-				          	 XivGear
-				          	 </body>
-				          	 </html>
-				          """;
+				<!DOCTYPE html>
+				<html lang="en">
+				<head>
+				<meta charset="UTF-8">
+				<meta property="og:site_name" content="XivGear"/>
+				<meta property="og:type" content="website"/>
+				<meta property="og:title" content=\"""" + title + """
+				"/>
+				<meta property="og:description" content=\"""" + desc + """
+				"/>
+				<meta property="og:url" content=\"""" + redirectUrl + """
+				"/>
+				<meta property="og:site_name" content="XivGear"/>
+				<title>XivGear - FFXIV Gear Planner</title>
+				<!-- <meta http-equiv="Refresh" content="0; url='""" + redirectUrl + """
+				'" /> -->
+				</head>
+				<body>
+				XivGear
+				</body>
+				</html>
+				""";
 	}
 
 }
