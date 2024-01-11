@@ -1,5 +1,9 @@
 package gg.xp;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gg.xp.handlers.Healthcheck;
+import gg.xp.handlers.Share;
+import gg.xp.handlers.Shortlink;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.lifecycle.StartableLifecycleStrategy;
@@ -15,16 +19,23 @@ public class GearPlanServerMain {
 		MutablePicoContainer pico = new PicoBuilder()
 				.withCaching()
 				.withLifecycle(StartableLifecycleStrategy.class)
+				.withAutomatic()
 				.build();
 		Config config = new Config();
 		pico.addComponent(config);
 		pico.addComponent(Server.class);
 		pico.addComponent(new GzipCacheImpl(5000, 10_000));
 		pico.addComponent(OracleNoSqlDb.class);
+		pico.addComponent(Healthcheck.class);
+		pico.addComponent(Stats.class);
+		pico.addComponent(Shortlink.class);
+		pico.addComponent(Share.class);
+		pico.addComponent(new ObjectMapper());
 		try {
-			pico.getComponent(Server.class);
+			pico.getComponents();
 			pico.start();
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			log.error("Startup failure", t);
 			System.exit(1);
 		}
