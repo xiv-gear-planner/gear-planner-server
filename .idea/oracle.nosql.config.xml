@@ -22,7 +22,7 @@
         <entry key="/Onprem/TS_PASSPHRASE" value="" />
         <entry key="/Onprem/USER_NAME" value="" />
         <entry key="/profile_type" value="Cloud" />
-        <entry key="/show_table/page_size" value="20" />
+        <entry key="/show_table/page_size" value="100" />
       </map>
     </option>
   </component>

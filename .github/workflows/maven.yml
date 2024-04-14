@@ -66,36 +66,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
-
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
-          script_stop: true
-          script: |
-            podman login ${{ env.REGISTRY }} -u $ -p ${{ secrets.GITHUB_TOKEN }}
-            podman pull  ${{ env.REGISTRY}}/${{ github.repository_owner }}/gear-planner-server:master
-            podman build -t gear-planner-deploy . --format docker
-
-      - name: Restart services
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
-          script_stop: true
-          sync: true
-          script: |
-            systemctl --user daemon-reload
-            systemctl --user restart gear-planner.service
-            curl --fail http://localhost:8080/healthcheck --retry 10 --retry-all-errors --retry-delay 3 --no-progress-meter
-            # Get something out of the DB so that the DB conn isn't cold-starting
-            curl --fail http://localhost:8080/shortlink/83cfa8ce-9533-4306-9c45-fc191d307ff1 --retry 10 --retry-all-errors --retry-delay 3 --no-progress-meter
-
-# TODO: doesn't have permissions
-#    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-#    - name: Update dependency graph
-#      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
-          #podman login ${{ env.REGISTRY }} -u ${{ github.repository_owner }} -p ${{ secrets.GITHUB_TOKEN }}
