@@ -55,17 +55,18 @@ public class Share {
 				JsonNode tree = mapper.readTree(response);
 				String name = tree.at("/name").textValue();
 				String desc = tree.at("/description").textValue();
+				// TODO: make the truncate end it with an elipsis
 				if (name == null) {
 					name = DEFAULT_NAME;
 				}
 				else {
-					name = StringUtils.truncate(name, 40) + " - " + DEFAULT_NAME;
+					name = StringUtils.abbreviate(name, "…", 40) + " - " + DEFAULT_NAME;
 				}
 				if (desc == null) {
 					desc = DEFAULT_DESC;
 				}
 				else {
-					desc = StringUtils.truncate(desc, 200) + "\n\n" + DEFAULT_DESC;
+					desc = StringUtils.abbreviate(desc, "…", 200) + "\n\n" + DEFAULT_DESC;
 				}
 				// TODO: parameterize this
 				String redir = "https://xivgear.app/#/sl/" + path;

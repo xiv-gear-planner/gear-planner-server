@@ -1,3 +1,5 @@
+package gg.xp;
+
 import gg.xp.GzipCacheImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;

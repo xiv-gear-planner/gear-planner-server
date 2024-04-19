@@ -186,4 +186,7 @@ public class GzipCacheImpl implements Cache, Startable {
 		return map.size();
 	}
 
+	void clear() {
+		map.clear();
+	}
 }
