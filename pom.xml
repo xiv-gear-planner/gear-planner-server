@@ -26,9 +26,7 @@
                     <threadCount>${surefire.threadcount}</threadCount>
                     <!-- Whoops, this actually never worked with testng -->
                     <perCoreThreadCount>false</perCoreThreadCount>
-                    <argLine>-Duser.country=US -Duser.language=en -DsequentialTriggerCycleTime=1000
-                        -Dskip-groovy-script-load=true
-                    </argLine>
+                    <argLine>-Duser.country=US -Duser.language=en</argLine>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
@@ -36,9 +34,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
-<!--                <configuration>-->
-<!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
-<!--                </configuration>-->
+                <!--                <configuration>-->
+                <!--                    <compilerArgs>&#45;&#45;enable-preview</compilerArgs>-->
+                <!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,6 +100,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>2.17.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
             <version>2.17.0</version>
         </dependency>
         <dependency>
