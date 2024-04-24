@@ -44,7 +44,7 @@ public class Share {
 
 
 	private void getShare(HttpExchange httpExchange) {
-		String path = base.relativize(httpExchange.getRequestURI()).getPath();
+		String path = base.relativize(httpExchange.getRequestURI()).getPath().split("/")[0];
 		String response = sl.getRaw(path);
 		try {
 			if (response == null) {

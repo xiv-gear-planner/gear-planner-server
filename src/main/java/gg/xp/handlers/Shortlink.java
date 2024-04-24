@@ -114,7 +114,7 @@ public class Shortlink {
 
 	private void retrieveShortLink(HttpExchange httpExchange) throws IOException {
 		stats.getCount.incrementAndGet();
-		String path = base.relativize(httpExchange.getRequestURI()).getPath();
+		String path = base.relativize(httpExchange.getRequestURI()).getPath().split("/")[0];
 		UUID uuid = UUID.fromString(path);
 		String result = getRaw(uuid);
 //		log.info("GET UUID: {}", );

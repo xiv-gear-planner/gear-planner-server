@@ -85,10 +85,10 @@ public class PersistenceTest {
 			String getBody = getResponse.body();
 			Assert.assertEquals(getBody, sheetJson);
 		}
-		// Clear cache and try again
+		// Clear cache and try again. Also test trailing slash.
 		pico.getComponent(GzipCacheImpl.class).clear();
 		{
-			var getResponse = http.send(HttpRequest.newBuilder(new URI("http://localhost:8085/shortlink/" + setUuid)).GET().build(), HttpResponse.BodyHandlers.ofString());
+			var getResponse = http.send(HttpRequest.newBuilder(new URI("http://localhost:8085/shortlink/" + setUuid + '/')).GET().build(), HttpResponse.BodyHandlers.ofString());
 			Assert.assertEquals(getResponse.statusCode(), HTTP_OK);
 			String getBody = getResponse.body();
 			Assert.assertEquals(getBody, sheetJson);
@@ -129,10 +129,10 @@ public class PersistenceTest {
 			String getBody = getResponse.body();
 			Assert.assertEquals(getBody, sheetJson);
 		}
-		// Clear cache and try again
+		// Clear cache and try again. Also test trailing slash.
 		pico.getComponent(GzipCacheImpl.class).clear();
 		{
-			var getResponse = http.send(HttpRequest.newBuilder(new URI("http://localhost:8085/shortlink/" + setUuid)).GET().build(), HttpResponse.BodyHandlers.ofString());
+			var getResponse = http.send(HttpRequest.newBuilder(new URI("http://localhost:8085/shortlink/" + setUuid + '/')).GET().build(), HttpResponse.BodyHandlers.ofString());
 			Assert.assertEquals(getResponse.statusCode(), HTTP_OK);
 			String getBody = getResponse.body();
 			Assert.assertEquals(getBody, sheetJson);
