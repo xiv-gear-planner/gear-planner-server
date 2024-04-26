@@ -122,7 +122,7 @@ public class Shortlink {
 			httpExchange.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 		}
 		else {
-			doResponse(httpExchange, result);
+			doResponse(httpExchange, result, "application/json");
 		}
 	}
 

@@ -12,11 +12,12 @@ public final class ResponseUtils {
 	private ResponseUtils() {
 	}
 
-	public static void doResponse(HttpExchange httpExchange, String responseString) throws IOException {
-		doResponse(httpExchange, responseString.getBytes(StandardCharsets.UTF_8));
+	public static void doResponse(HttpExchange httpExchange, String responseString, String contentType) throws IOException {
+		doResponse(httpExchange, responseString.getBytes(StandardCharsets.UTF_8), contentType);
 	}
 
-	public static void doResponse(HttpExchange httpExchange, byte[] responseBytes) throws IOException {
+	public static void doResponse(HttpExchange httpExchange, byte[] responseBytes, String contentType) throws IOException {
+		httpExchange.getResponseHeaders().add("Content-Type", contentType);
 		httpExchange.sendResponseHeaders(HTTP_OK, responseBytes.length);
 		OutputStream body = httpExchange.getResponseBody();
 		body.write(responseBytes);
