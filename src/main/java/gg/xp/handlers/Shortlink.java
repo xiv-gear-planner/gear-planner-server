@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static gg.xp.util.ResponseUtils.doResponse;
 import static java.net.HttpURLConnection.HTTP_BAD_METHOD;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_ENTITY_TOO_LARGE;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
@@ -115,7 +116,15 @@ public class Shortlink {
 	private void retrieveShortLink(HttpExchange httpExchange) throws IOException {
 		stats.getCount.incrementAndGet();
 		String path = base.relativize(httpExchange.getRequestURI()).getPath().split("/")[0];
-		UUID uuid = UUID.fromString(path);
+		UUID uuid;
+		try {
+			uuid = UUID.fromString(path);
+		}
+		catch (IllegalArgumentException ignored) {
+			log.error("Bad UUID: {}", path);
+			httpExchange.sendResponseHeaders(HTTP_BAD_REQUEST, -1);
+			return;
+		}
 		String result = getRaw(uuid);
 //		log.info("GET UUID: {}", );
 		if (result == null) {
