@@ -131,6 +131,7 @@ public class Shortlink {
 			httpExchange.sendResponseHeaders(HTTP_NOT_FOUND, -1);
 		}
 		else {
+			httpExchange.getResponseHeaders().add("cache-control", "max-age=7200, public, immutable");
 			doResponse(httpExchange, result, "application/json");
 		}
 	}
