@@ -58,10 +58,6 @@ public class OracleNoSqlDb implements Database {
 			});
 			Thread.sleep(5);
 		}
-//		String shortlink2 = oracleNoSqlDb.getShortlink(UUID.fromString("11111111-3566-4416-9523-9d3c05430921"));
-//		log.info(shortlink2);
-//		oracleNoSqlDb.putShortLink(UUID.fromString("33333333-3566-4416-9523-9d3c05430921"), "{\"foo\":123}");
-//		System.exit(0);
 	}
 
 	public void countRows() {
@@ -81,32 +77,10 @@ public class OracleNoSqlDb implements Database {
 			return null;
 		}
 		else {
-			return value.get("datavalue").toString();
+			MapValue dataMap = value.get("datavalue").asMap();
+			dataMap.put("timestamp", linkuuid.getModificationTime());
+			return dataMap.toString();
 		}
-//
-//		int tries = 100;
-//		while (true) {
-//			try {
-//				GetResult linkuuid = handle.get(new GetRequest().setTableName("shortlinks").setKey(new MapValue().put("linkuuid", uuid.toString())));
-//				MapValue value = linkuuid.getValue();
-//				if (value == null) {
-//					return null;
-//				}
-//				else {
-//					return value.get("datavalue").toString();
-//				}
-//			}
-//			catch (RetryableException te) {
-//				tries--;
-//				if (tries > 0) {
-//					log.info("Throttled, sleeping");
-//					sleep((int) (1_000 + Math.random() * 2_000));
-//				}
-//				else {
-//					throw te;
-//				}
-//			}
-//		}
 	}
 
 	private static void sleep(int ms) {
