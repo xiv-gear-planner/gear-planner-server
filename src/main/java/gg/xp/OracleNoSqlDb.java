@@ -8,7 +8,10 @@ import oracle.nosql.driver.ops.GetRequest;
 import oracle.nosql.driver.ops.GetResult;
 import oracle.nosql.driver.ops.PutRequest;
 import oracle.nosql.driver.ops.PutResult;
+import oracle.nosql.driver.ops.QueryIterableResult;
 import oracle.nosql.driver.ops.QueryRequest;
+import oracle.nosql.driver.ops.QueryResult;
+import oracle.nosql.driver.util.SimpleRateLimiter;
 import oracle.nosql.driver.values.JsonOptions;
 import oracle.nosql.driver.values.MapValue;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class OracleNoSqlDb implements Database {
 
@@ -52,7 +56,8 @@ public class OracleNoSqlDb implements Database {
 				try {
 					String shortlink = oracleNoSqlDb.getShortlink(UUID.fromString("58cd500c-3566-4416-9523-9d3c05430921"));
 					log.info(shortlink);
-				} catch (Throwable t) {
+				}
+				catch (Throwable t) {
 					log.error("Error", t);
 				}
 			});
@@ -60,13 +65,20 @@ public class OracleNoSqlDb implements Database {
 		}
 	}
 
-	public void countRows() {
-		List<MapValue> results;
+	public long countRows() {
+		long total = 0;
 		try (QueryRequest queryRequest = new QueryRequest()) {
-			queryRequest.setStatement("select count(*) from shortlinks");
-			results = handle.query(queryRequest).getResults();
+			queryRequest.setStatement("SELECT count(*) AS ct FROM shortlinks");
+			do {
+				QueryResult res = handle.query(queryRequest);
+				// Only non-empty batches will contain the aggregate row
+				for (MapValue row : res.getResults()) {
+					total = row.get("ct").getLong();
+				}
+			} while (!queryRequest.isDone());
 		}
-		log.info("Results: {}", results);
+		log.info("Results: {}", total);
+		return total;
 	}
 
 	@Override
@@ -104,5 +116,15 @@ public class OracleNoSqlDb implements Database {
 		// TODO: error handling here?
 	}
 
+	void iterateAll(Consumer<MapValue> consumer) {
+		QueryRequest query = new QueryRequest().setStatement("select * from shortlinks");
+		// TODO: this is untested
+		query.setReadRateLimiter(new SimpleRateLimiter(10));
+		QueryIterableResult iter = handle.queryIterable(query);
+		for (MapValue entry : iter) {
+			log.info(entry.toString());
+			consumer.accept(entry);
+		}
+	}
 
 }
