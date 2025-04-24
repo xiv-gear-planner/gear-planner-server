@@ -1,6 +1,7 @@
 package gg.xp;
 
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.picocontainer.Startable;
 import org.slf4j.Logger;
@@ -157,12 +158,15 @@ public class GzipCacheImpl implements Cache, Startable {
 	}
 
 	@Override
-	public @Nullable String computeIfAbsent(UUID key, Function<UUID, String> getter) {
+	public @Nullable String computeIfAbsent(UUID key, Function<UUID, @Nullable String> getter) {
 		MutableObject<String> out = new MutableObject<>();
 		map.compute(key, (uuid, current) -> {
 			if (current == null) {
 				String newValue = getter.apply(uuid);
 				// This avoids having to re-compress
+				if (newValue == null) {
+					return null;
+				}
 				out.setValue(newValue);
 				// TODO: look into ways of having this not block the request
 				return new CacheEntry(newValue);
@@ -177,7 +181,7 @@ public class GzipCacheImpl implements Cache, Startable {
 	}
 
 	@Override
-	public void set(UUID key, String value) {
+	public void set(UUID key, @NotNull String value) {
 		map.put(key, new CacheEntry(value));
 	}
 
