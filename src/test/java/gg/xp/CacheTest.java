@@ -179,4 +179,11 @@ public class CacheTest {
 		Assert.assertSame(result, input);
 	}
 
+	@Test
+	void testCacheIgnoresNull() {
+		GzipCacheImpl cache = new GzipCacheImpl(100, 1000);
+		String out = cache.computeIfAbsent(UUID.randomUUID(), ignored -> null);
+		Assert.assertNull(out);
+		Assert.assertEquals(cache.cacheSize(), 0);
+	}
 }
